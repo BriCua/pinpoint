@@ -1,1 +1,2 @@
 # PinPoint
+## Simple webpage highlighter.
