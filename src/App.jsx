@@ -48,46 +48,59 @@ export default function App() {
   }
 
   function deleteNote(id) {
-  chrome.storage.local.get({ notes: [] }, (res) => {
-    const updatedNotes = res.notes.filter((note) => note.id !== id);
+    chrome.storage.local.get({ notes: [] }, (res) => {
+      const updatedNotes = res.notes.filter((note) => note.id !== id);
 
-    chrome.storage.local.set({ notes: updatedNotes }, () => {
-      setNotes(updatedNotes); // update UI immediately
+      chrome.storage.local.set({ notes: updatedNotes }, () => {
+        setNotes(updatedNotes); // update UI immediately
+      });
     });
-  });
-}
-  
-
+  }
 
   return (
     <div className="p-3 w-[320px] text-sm">
       <h1 className="font-bold mb-2">PinPoint</h1>
 
-      <input
-        className="border p-1 w-full mb-2"
-        placeholder="Save as…"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-
-      <button
-        className="bg-black text-white px-2 py-1 w-full mb-3"
-        onClick={saveNote}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // prevent page reload
+          saveNote();
+        }}
       >
-        Save Highlight
-      </button>
+        <input
+          className="border p-1 w-full mb-2"
+          placeholder="Save as…"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
+        <button
+          type="submit"
+          className="bg-black text-white px-2 py-1 w-full mb-3"
+        >
+           📌 Pin Highlight
+        </button>
+      </form>
+
+      
       <ul className="space-y-2 max-h-30 overflow-y-scroll">
         {notes.map((n) => (
-          <li
-            key={n.id}
-            className="border   flex justify-between "
-          >
-            <div className="p-2 cursor-pointer hover:bg-gray-100 w-9/10 flex flex-col justify-between items-start" onClick={() => openNote(n.link)}>
+          <li key={n.id} className="border   flex justify-between ">
+            <div
+              className="p-2 cursor-pointer hover:bg-gray-100 w-9/10 flex flex-col justify-between items-start"
+              onClick={() => openNote(n.link)}
+            >
               <div className="font-semibold">{n.title}</div>
               <div className="text-xs opacity-70">{n.preview}…</div>
             </div>
-            <div className="flex justify-center w-1/10 cursor-pointer hover:bg-red-100 items-center" onClick={() => {deleteNote(n.id)}}>🗑️</div>
+            <div
+              className="flex justify-center w-1/10 cursor-pointer hover:bg-red-100 items-center"
+              onClick={() => {
+                deleteNote(n.id);
+              }}
+            >
+              🗑️
+            </div>
           </li>
         ))}
       </ul>
