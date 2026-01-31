@@ -1,1 +1,0 @@
-chrome.runtime.onMessage.addListener((e,s,o)=>{if(e.type==="SAVE_NOTE")return chrome.storage.local.get({notes:[]},t=>{const r=[...t.notes,e.payload];chrome.storage.local.set({notes:r},()=>{o({success:!0})})}),!0;if(e.type==="GET_NOTES")return chrome.storage.local.get({notes:[]},t=>o(t.notes)),!0});

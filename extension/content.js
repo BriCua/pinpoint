@@ -1,1 +1,0 @@
-chrome.runtime.onMessage.addListener((t,i,n)=>{if(t.type==="GET_SELECTION"){const e=window.getSelection(),o=e?e.toString().trim():"";n({text:o,url:location.href})}});console.log("content script alive");
