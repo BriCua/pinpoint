@@ -17,7 +17,7 @@ PinPoint is a sleek Chrome extension designed for students, researchers, and any
 
 This guide is for developers who want to tinker with the code, add features, or see how it works under the hood.
 
-### Prerequisites
+### Prerequisites 
 
 -   [Node.js](https://nodejs.org/) (which includes npm) - The runtime for our project.
 
