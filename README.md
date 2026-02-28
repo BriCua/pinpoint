@@ -11,7 +11,7 @@ PinPoint is a sleek Chrome extension designed for students, researchers, and any
 
 ## 🚀 Future Features
 
--   **☁️ Cross-device Sync:** We're working on a major update to sync your pins across all your devices using your Google account. Your research will always be with you, no matter where you are! 💻📱
+-   **☁️ Cross-device Sync:** I'm working on a major update to sync your pins across all your devices using your Google account. Your research will always be with you, no matter where you are! 💻📱
 
 ## 🛠️ Installation & Usage (for Development)
 
