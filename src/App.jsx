@@ -4,14 +4,27 @@ import "./App.css";
 export default function App() {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState([]);
+  const [failedPins, setFailedPins] = useState([]);
 
   useEffect(() => {
-    chrome.storage.local.get(["notes"], (res) => {
+    chrome.storage.local.get(["notes", "failedPins"], (res) => {
       setNotes(res.notes || []);
+      setFailedPins(res.failedPins || []);
     });
+
+    const handleStorageChange = (changes) => {
+      if (changes.failedPins) {
+        setFailedPins(changes.failedPins.newValue || []);
+      }
+      if (changes.notes) {
+        setNotes(changes.notes.newValue || []);
+      }
+    };
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => chrome.storage.onChanged.removeListener(handleStorageChange);
   }, []);
 
-function getSelectionFromActiveTab() {
+  function getSelectionFromActiveTab() {
     return new Promise((resolve, reject) => {
       chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
         chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION" }, (res) => {
@@ -20,6 +33,7 @@ function getSelectionFromActiveTab() {
             return;
           }
           if (!res?.text) {
+            console.log("response was", res);
             reject("Highlight text first");
             return;
           }
@@ -74,10 +88,21 @@ function getSelectionFromActiveTab() {
   }
 
   function openNote(note) {
-    chrome.runtime.sendMessage({
-      type: "OPEN_AND_FALLBACK",
-      payload: { link: note.link, text: note.text },
-    });
+    failedPins.includes(note.id)
+      ? chrome.runtime.sendMessage(
+          {
+            type: "RETRY_FRAGMENT",
+            payload: { text: note.text, noteId: note.id, link: note.link },
+          },
+          () => void chrome.runtime.lastError,
+        )
+      : chrome.runtime.sendMessage(
+          {
+            type: "OPEN_AND_FALLBACK",
+            payload: { link: note.link, text: note.text, id: note.id },
+          },
+          () => void chrome.runtime.lastError,
+        );
   }
 
   function deleteNote(id) {
@@ -111,23 +136,22 @@ function getSelectionFromActiveTab() {
           type="submit"
           className="bg-black text-white px-2 py-1 w-full mb-3"
         >
-           📌 Pin Highlight
+          📌 Pin Highlight
         </button>
       </form>
 
-      
       <ul className="space-y-2 max-h-30 overflow-y-scroll">
         {notes.map((n) => (
           <li key={n.id} className="border   flex justify-between ">
             <div
-              className="p-2 cursor-pointer hover:bg-gray-100 w-9/10 flex flex-col justify-between items-start"
+              className={`p-2 cursor-pointer w-9/10 flex flex-col justify-between items-start ${failedPins.includes(n.id) ? `bg-orange-100 hover:bg-orange-200` : `hover:bg-gray-100`}`}
               onClick={() => openNote(n)}
             >
               <div className="font-semibold">{n.title}</div>
               <div className="text-xs opacity-70">{n.preview}…</div>
             </div>
             <div
-              className="flex justify-center w-1/10 cursor-pointer hover:bg-red-100 items-center"
+              className={`flex justify-center w-1/10 cursor-pointer items-center ${failedPins.includes(n.id) ? `bg-orange-100 hover:bg-red-200` : `hover:bg-red-100`}`}
               onClick={() => {
                 deleteNote(n.id);
               }}
