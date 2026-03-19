@@ -117,7 +117,7 @@ export default function App() {
 
   return (
     <div className="p-3 w-[320px] text-sm">
-      <h1 className="font-bold mb-2">PinPoint</h1>
+      <h1 className="font-bold mb-2 text-lg">📍PinPoint</h1>
 
       <form
         onSubmit={(e) => {
@@ -125,18 +125,21 @@ export default function App() {
           saveNote();
         }}
       >
-        <input
-          className="border p-1 w-full mb-2"
-          placeholder="Save as…"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div className="input-save-container">
+          <input
+            className="input-save py-2 px-1 w-full mb-2 rounded-sm border-2 outline-none ring-inset satisfying-transition shadow-sm font-sans shadow-[rgba(0,0,0,0.4)] hover:shadow-red-600 focus:shadow-red-700 focus:shadow-md"
+            placeholder="Save pin as…"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="bg-black text-white px-2 py-1 w-full mb-3"
-        >
-          📌 Pin Highlight
+        <button type="submit" className="button shadow-sm shadow-[rgba(0,0,0,0.4)] mb-2">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Pin Highlight 📌
         </button>
       </form>
 
@@ -148,7 +151,7 @@ export default function App() {
               onClick={() => openNote(n)}
             >
               <div className="font-semibold">{n.title}</div>
-              <div className="text-xs opacity-70">{n.preview}…</div>
+              <div className="text-xs opacity-70 font-sans">{n.preview}…</div>
             </div>
             <div
               className={`flex justify-center w-1/10 cursor-pointer items-center ${failedPins.includes(n.id) ? `bg-orange-100 hover:bg-red-200` : `hover:bg-red-100`}`}

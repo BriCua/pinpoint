@@ -1,1 +1,110 @@
 @import 'tailwindcss';
+
+
+*{
+  font-family: monospace, sans-serif;
+}
+
+.satisfying-transition{
+  transition: 1s all cubic-bezier(0.23, 1, 0.320, 1)
+}
+.input-save-container {
+  position: relative;
+}
+
+.input-save-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 0.5rem); /* Matches the mb-2 on the input */
+  z-index: 10;
+  pointer-events: none;
+  border-radius: 0.25rem;
+  transition: 0.5s all cubic-bezier(0.23, 1, 0.320, 1)
+}
+.input-save-container:has(.input-save:focus)::after {
+  border: red 2px solid;
+}
+
+.button {
+  cursor: pointer;
+  position: relative;
+  padding: 0.5rem 0;
+  text-decoration: none;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.9);
+  width: 100%;
+  transition: 1s background-color cubic-bezier(0.23, 1, 0.320, 1);
+  border-radius:0.25rem;
+}
+
+.button:hover{
+  background: rgba(0,0,0, 0.8);
+}
+.button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.button:hover:after {
+  left: 100%;
+}
+.button span {
+  position: absolute;
+  display: block;
+  transition: 1s cubic-bezier(0.23, 1, 0.320, 1);
+}
+.button span:nth-child(1) {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #fff;
+}
+.button:hover span:nth-child(1) {
+  width: 100%;
+  transform: translateX(100%);
+}
+.button span:nth-child(2) {
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 0;
+  background: #fff;
+}
+.button:hover span:nth-child(2) {
+  height: 100%;
+  transform: translateY(100%);
+}
+.button span:nth-child(3) {
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 1px;
+  background: #fff;
+}
+.button:hover span:nth-child(3) {
+  width: 100%;
+  transform: translateX(-100%);
+}
+.button span:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  height: 0;
+  background: #fff;
+}
+.button:hover span:nth-child(4) {
+  height: 100%;
+  transform: translateY(-100%);
+}
