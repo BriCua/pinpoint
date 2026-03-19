@@ -1,4 +1,5 @@
 const openTabs = {};
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "OPEN_AND_FALLBACK") {
     const { link, text, id } = msg.payload;
@@ -7,13 +8,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       chrome.storage.session.set({ [tab.id]: { noteId: id, text } }, () => {});
     });
   } else if (msg.type === "RETRY_FRAGMENT") {
-    console.log("retry fragment received");
     const { noteId, text, link } = msg.payload;
     chrome.storage.session.get(null, (res) => {
       // Find tabId where noteId matches (handles both old string format and new object format)
       const tabId = Object.keys(res).find((key) => {
         const val = res[key];
-        return val === noteId || (val && typeof val === "object" && val.noteId === noteId);
+        return (
+          val === noteId ||
+          (val && typeof val === "object" && val.noteId === noteId)
+        );
       });
 
       if (tabId) {
@@ -44,7 +47,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
     chrome.storage.session.get(String(tabId), (result) => {
       const data = result[String(tabId)];
       if (data) {
-        const { noteId, text } = typeof data === "object" ? data : { noteId: data, text: "" };
+        const { noteId, text } =
+          typeof data === "object" ? data : { noteId: data, text: "" };
         chrome.storage.session.remove(String(tabId), () => {
           chrome.tabs.sendMessage(tabId, {
             type: "CHECK_FRAGMENT",

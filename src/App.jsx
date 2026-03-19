@@ -99,7 +99,7 @@ export default function App() {
       : chrome.runtime.sendMessage(
           {
             type: "OPEN_AND_FALLBACK",
-            payload: { link: note.link, text: note.text, id: note.id },
+            payload: { link: note.link, text: note.text, noteId: note.id },
           },
           () => void chrome.runtime.lastError,
         );
