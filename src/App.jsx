@@ -5,6 +5,14 @@ export default function App() {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState([]);
   const [failedPins, setFailedPins] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   useEffect(() => {
     chrome.storage.local.get(["notes", "failedPins"], (res) => {
@@ -29,11 +37,10 @@ export default function App() {
       chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
         chrome.tabs.sendMessage(tab.id, { type: "GET_SELECTION" }, (res) => {
           if (chrome.runtime.lastError) {
-            reject("Content script not reachable");
+            reject("Content script not reachable! (Refresh the page and try again)");
             return;
           }
           if (!res?.text) {
-            console.log("response was", res);
             reject("Highlight text first");
             return;
           }
@@ -74,6 +81,7 @@ export default function App() {
     chrome.storage.local.set({ notes: updatedNotes }, () => {
       setNotes(updatedNotes);
       setTitle("");
+      setError("");
     });
   }
 
@@ -82,8 +90,8 @@ export default function App() {
       const selection = await getSelectionFromActiveTab();
       const note = createNoteObject(selection, title);
       persistNotes(note, notes, setNotes, setTitle);
-    } catch (error) {
-      alert(error);
+    } catch (err) {
+      setError(err);
     }
   }
 
@@ -116,7 +124,7 @@ export default function App() {
   }
 
   return (
-    <div className="p-3 w-[320px] text-sm">
+    <div className="p-3 w-90 text-sm">
       <h1 className="font-bold mb-2 text-lg">📍PinPoint</h1>
 
       <form
@@ -125,12 +133,15 @@ export default function App() {
           saveNote();
         }}
       >
-        <div className="input-save-container">
+        <div className="input-save-container shadow-[rgba(0,0,0,0.4)] shadow-sm has-[input:focus]:shadow-red-700  has-[input:focus]:shadow-md hover:shadow-red-600 rounded-sm">
           <input
-            className="input-save py-2 px-1 w-full mb-2 rounded-sm border-2 outline-none ring-inset satisfying-transition shadow-sm font-sans shadow-[rgba(0,0,0,0.4)] hover:shadow-red-600 focus:shadow-red-700 focus:shadow-md"
+            className="input-save py-2 px-1 w-full  rounded-sm border-2 outline-none ring-inset satisfying-transition  font-sans  "
             placeholder="Save pin as…"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              if (error) setError("");
+            }}
           />
         </div>
 
@@ -142,6 +153,18 @@ export default function App() {
           Pin Highlight 📌
         </button>
       </form>
+
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-2 py-1 rounded mb-2 text-xs relative">
+          <span className="block sm:inline">{error}</span>
+          <span
+            className="absolute top-0 bottom-0 right-0 px-2 py-1 cursor-pointer"
+            onClick={() => setError("")}
+          >
+            ×
+          </span>
+        </div>
+      )}
 
       <ul className="space-y-2 max-h-30 overflow-y-scroll">
         {notes.map((n) => (
