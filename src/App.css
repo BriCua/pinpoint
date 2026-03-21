@@ -3,6 +3,10 @@
 
 *{
   font-family: monospace, sans-serif;
+ -webkit-user-select: none; /* Safari, Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Standard syntax */
 }
 
 .input-save-container {
