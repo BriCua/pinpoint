@@ -27,3 +27,6 @@ dist-ssr
 .env
 
 *.zip
+*.pem
+*.crx
+*.cache_ggshield
