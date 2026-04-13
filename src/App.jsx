@@ -124,7 +124,7 @@ export default function App() {
   }
 
   return (
-    <div className="p-3 w-90 text-sm">
+    <div className="p-3 w-120 text-sm">
       <h1 className="font-bold mb-2 text-lg">📍PinPoint</h1>
 
       <form
@@ -166,7 +166,7 @@ export default function App() {
         </div>
       )}
 
-      <ul className="space-y-2 max-h-30 overflow-y-scroll">
+      <ul className="space-y-2 max-h-40 overflow-y-scroll">
         {notes.map((n) => (
           <li key={n.id} className="border   flex justify-between ">
             <div
