@@ -135,7 +135,7 @@ export default function App() {
       >
         <div className="input-save-container shadow-[rgba(0,0,0,0.4)] shadow-sm has-[input:focus]:shadow-red-700  has-[input:focus]:shadow-md hover:shadow-red-600 rounded-sm">
           <input
-            className="input-save py-2 px-1 w-full  rounded-sm border-2 outline-none ring-inset satisfying-transition  font-sans  "
+            className="input-save py-2 px-1 w-full  rounded-sm border-2 focus:border-white outline-none ring-inset satisfying-transition  font-sans  "
             placeholder="Save pin as…"
             value={title}
             onChange={(e) => {
